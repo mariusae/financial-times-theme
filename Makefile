@@ -1,5 +1,8 @@
 .PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install
 
+# VSCode binary (override with CODE=... make vscode.install)
+CODE ?= code
+
 # Build all themes
 all: vscode zed ghostty fish
 
@@ -13,7 +16,7 @@ vscode:
 
 vscode.install: vscode
 	@echo "Installing VSCode theme..."
-	code --install-extension build/vscode/financial-times-theme-0.1.0.vsix
+	$(CODE) --install-extension build/vscode/financial-times-theme-0.1.0.vsix
 
 # Zed targets
 zed:
