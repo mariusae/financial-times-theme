@@ -8,6 +8,12 @@ This project generates themes in two variants:
 - **Standard**: Light theme with paper background
 - **Inverse**: Dark theme with inverted colors
 
+### Accessibility
+
+All themes are designed with accessibility in mind:
+- **WCAG AA compliant**: All colors meet the 4.5:1 minimum contrast ratio for normal text
+- **Colorblind-friendly**: Green colors are at least 2x brighter than reds (luminance ratio), making them distinguishable for users with deuteranopia or protanopia (red-green color blindness)
+
 ## Prerequisites
 
 - Python 3.7 or later
