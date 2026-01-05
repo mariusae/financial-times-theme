@@ -1,13 +1,13 @@
-.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install
+.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install sublime sublime.install
 
 # VSCode binary (override with CODE=... make vscode.install)
 CODE ?= code
 
 # Build all themes
-all: vscode zed ghostty fish
+all: vscode zed ghostty fish sublime
 
 # Build and install all themes
-all.install: vscode.install zed.install ghostty.install fish.install
+all.install: vscode.install zed.install ghostty.install fish.install sublime.install
 
 # VSCode targets
 vscode:
@@ -55,6 +55,18 @@ fish.install: fish
 	@echo "  source ~/.config/fish/themes/financial-times-standard.theme"
 	@echo "  or"
 	@echo "  source ~/.config/fish/themes/financial-times-inverse.theme"
+
+# Sublime Text targets
+sublime:
+	@echo "Building Sublime Text theme..."
+	python3 sublime.py
+
+sublime.install: sublime
+	@echo "Installing Sublime Text theme..."
+	@mkdir -p ~/Library/Application\ Support/Sublime\ Text/Packages/User
+	cp build/sublime/*.sublime-color-scheme ~/Library/Application\ Support/Sublime\ Text/Packages/User/
+	@echo "Sublime Text themes installed to ~/Library/Application Support/Sublime Text/Packages/User/"
+	@echo "To activate: Preferences > Select Color Scheme > Financial Times Standard/Inverse"
 
 # Clean build artifacts
 clean:
