@@ -56,10 +56,14 @@ def build_style(theme: ThemeDefinition) -> Dict[str, object]:
     # Accent color (using teal for info/links)
     accent = get_color("teal-100").hex_value if is_dark else get_color("teal").hex_value
 
-    # Status colors
-    error_color = get_color("crimson").hex_value
+    # Status colors - use brighter variants on dark backgrounds for contrast
+    if is_dark:
+        error_color = "#ff6666"  # Brighter red for WCAG AA on dark bg (5.03:1)
+        success_color = "#66cc99"  # Brighter green for WCAG AA on dark bg (7.30:1)
+    else:
+        error_color = get_color("crimson").hex_value
+        success_color = get_color("jade").hex_value
     warning_color = get_color("mandarin").hex_value
-    success_color = get_color("jade").hex_value
 
     style = {
         # Borders
