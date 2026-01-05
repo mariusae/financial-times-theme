@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Iterable, List, Tuple
 import subprocess
 
-from ft_palette import INVERSE_THEME, STANDARD_THEME, ThemeDefinition
+from ft_palette import INVERSE_THEME, STANDARD_THEME, ThemeDefinition, get_color
 
 PACKAGE_METADATA = {
     "name": "financial-times-theme",
@@ -29,6 +29,12 @@ def build_theme_payload(theme: ThemeDefinition) -> dict:
     selection = theme.selection.hex_value
     comment = theme.comment_text.hex_value
 
+    # Use a subtler, muted color for the status bar to reduce visual prominence
+    if theme.slug == "standard":
+        status_bar_bg = get_color("black-10").hex_value  # #e6d9ce - muted with good contrast
+    else:
+        status_bar_bg = background
+
     colors = {
         "editor.background": background,
         "editor.foreground": foreground,
@@ -39,8 +45,10 @@ def build_theme_payload(theme: ThemeDefinition) -> dict:
         "editorGutter.commentRangeForeground": comment,
         "sideBar.background": background,
         "sideBar.foreground": foreground,
-        "statusBar.background": background,
+        "statusBar.background": status_bar_bg,
         "statusBar.foreground": foreground,
+        "statusBar.noFolderBackground": status_bar_bg,
+        "statusBar.noFolderForeground": foreground,
         "activityBar.background": background,
         "activityBar.foreground": foreground,
         "editorLineNumber.foreground": comment,
