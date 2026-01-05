@@ -27,7 +27,16 @@ ANSI_PALETTE_NAMES: List[str] = [
     "white",
 ]
 
-MIN_CONTRAST_RATIO = 3.0
+MIN_CONTRAST_RATIO = 4.5
+
+# Minimum luminance ratio between red/green pairs for colorblind accessibility.
+# A ratio of 2.0:1 provides strong differentiation for deuteranopia/protanopia.
+MIN_COLORBLIND_LUMINANCE_RATIO = 2.0
+
+# Indices in ANSI_PALETTE_NAMES that are green-ish (should be lighter than reds)
+GREEN_INDICES = {2, 10}  # jade, wasabi
+# Indices that are red-ish (reference for luminance comparison)
+RED_INDICES = {1, 9}  # claret, crimson
 
 
 def hex_to_rgb(color: str) -> tuple[float, float, float]:
@@ -78,14 +87,16 @@ def mix_colors(color: str, fallback: str, amount: float) -> str:
     return f"#{nr:02x}{ng:02x}{nb:02x}"
 
 
-def ensure_contrast(color: str, background: str, fallback: str) -> str:
+def ensure_contrast(
+    color: str, background: str, fallback: str, min_ratio: float = MIN_CONTRAST_RATIO
+) -> str:
     """Return a color with acceptable contrast to the background."""
 
-    if contrast_ratio(color, background) >= MIN_CONTRAST_RATIO:
+    if contrast_ratio(color, background) >= min_ratio:
         return color
-    for amount in (0.25, 0.5, 0.75, 1.0):
+    for amount in [0.05 * i for i in range(1, 21)]:
         candidate = mix_colors(color, fallback, amount)
-        if contrast_ratio(candidate, background) >= MIN_CONTRAST_RATIO:
+        if contrast_ratio(candidate, background) >= min_ratio:
             return candidate
     return fallback
 
@@ -96,17 +107,61 @@ def trim_hash(value: str) -> str:
     return value.lstrip("#")
 
 
+def luminance_ratio(color_a: str, color_b: str) -> float:
+    """Compute the luminance ratio between two colors (lighter/darker)."""
+
+    lum_a = relative_luminance(color_a)
+    lum_b = relative_luminance(color_b)
+    lighter = max(lum_a, lum_b)
+    darker = min(lum_a, lum_b)
+    if darker == 0:
+        return float("inf")
+    return lighter / darker
+
+
 def build_palette_values(theme: ThemeDefinition) -> List[str]:
     """Map the configured palette names to hex values with contrast fixes."""
 
     background = theme.background.hex_value
     fallback = theme.body_text.hex_value
+    is_dark_theme = relative_luminance(background) < 0.2
+
+    # First pass: ensure contrast with background
     values: List[str] = []
     for name in ANSI_PALETTE_NAMES:
         color = get_color(name).hex_value
         color = ensure_contrast(color, background, fallback)
-        values.append(trim_hash(color))
-    return values
+        values.append(color)
+
+    # Second pass: ensure colorblind accessibility on dark themes
+    # Boost green luminance if too close to corresponding red
+    if is_dark_theme:
+        for green_idx in GREEN_INDICES:
+            # Find corresponding red (0-7 normal, 8-15 bright)
+            red_idx = green_idx - 1  # jade(2)->claret(1), wasabi(10)->crimson(9)
+            if red_idx not in RED_INDICES:
+                continue
+
+            green_color = values[green_idx]
+            red_color = values[red_idx]
+            green_lum = relative_luminance(green_color)
+            red_lum = relative_luminance(red_color)
+
+            # Green should be noticeably lighter than red
+            current_ratio = green_lum / red_lum if red_lum > 0 else float("inf")
+
+            if current_ratio < MIN_COLORBLIND_LUMINANCE_RATIO:
+                # Boost green luminance by mixing more toward white
+                target_lum = red_lum * MIN_COLORBLIND_LUMINANCE_RATIO
+                for amount in [0.05 * i for i in range(1, 21)]:
+                    candidate = mix_colors(green_color, fallback, amount)
+                    if relative_luminance(candidate) >= target_lum:
+                        # Verify we still have good background contrast
+                        if contrast_ratio(candidate, background) >= MIN_CONTRAST_RATIO:
+                            values[green_idx] = candidate
+                        break
+
+    return [trim_hash(c) for c in values]
 
 
 def build_theme_lines(theme: ThemeDefinition, palette_values: List[str]) -> List[str]:
