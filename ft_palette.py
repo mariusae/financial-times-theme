@@ -622,7 +622,7 @@ def create_inverse_theme() -> ThemeDefinition:
         background=get_color("slate"),
         body_text=get_color("body-inverse-text"),
         comment_text=get_color("muted-inverse-text"),
-        selection=get_color("jade"),
+        selection=get_color("matisse-blue"),
     )
 
 
