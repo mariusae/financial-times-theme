@@ -33,7 +33,7 @@ def build_theme_payload(theme: ThemeDefinition) -> dict:
     if theme.slug == "standard":
         status_bar_bg = get_color("black-10").hex_value  # #e6d9ce - muted with good contrast
     else:
-        status_bar_bg = background
+        status_bar_bg = get_color("black-90").hex_value  # #1a1817 - subtle contrast for inverse
 
     colors = {
         "editor.background": background,
