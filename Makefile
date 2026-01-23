@@ -1,13 +1,13 @@
-.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install sublime sublime.install
+.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install sublime sublime.install tmux tmux.install
 
 # VSCode binary (override with CODE=... make vscode.install)
 CODE ?= code
 
 # Build all themes
-all: vscode zed ghostty fish sublime
+all: vscode zed ghostty fish sublime tmux
 
 # Build and install all themes
-all.install: vscode.install zed.install ghostty.install fish.install sublime.install
+all.install: vscode.install zed.install ghostty.install fish.install sublime.install tmux.install
 
 # VSCode targets
 vscode:
@@ -67,6 +67,21 @@ sublime.install: sublime
 	cp build/sublime/*.sublime-color-scheme ~/Library/Application\ Support/Sublime\ Text/Packages/User/
 	@echo "Sublime Text themes installed to ~/Library/Application Support/Sublime Text/Packages/User/"
 	@echo "To activate: Preferences > Select Color Scheme > Financial Times Standard/Inverse"
+
+# tmux targets
+tmux:
+	@echo "Building tmux theme..."
+	python3 tmux.py
+
+tmux.install: tmux
+	@echo "Installing tmux theme..."
+	@mkdir -p ~/.config/tmux
+	cp build/tmux/*.conf ~/.config/tmux/
+	@echo "tmux themes installed to ~/.config/tmux/"
+	@echo "Add to your ~/.tmux.conf:"
+	@echo "  source-file ~/.config/tmux/financial-times-standard.conf"
+	@echo "  or"
+	@echo "  source-file ~/.config/tmux/financial-times-inverse.conf"
 
 # Clean build artifacts
 clean:
