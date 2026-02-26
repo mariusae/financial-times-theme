@@ -32,8 +32,10 @@ def build_theme_payload(theme: ThemeDefinition) -> dict:
     # Use a subtler, muted color for the status bar to reduce visual prominence
     if theme.slug == "standard":
         status_bar_bg = get_color("black-10").hex_value  # #e6d9ce - muted with good contrast
+        border = get_color("black-20").hex_value  # #ccc1b7 - visible against paper
     else:
         status_bar_bg = get_color("black-90").hex_value  # #1a1817 - subtle contrast for inverse
+        border = get_color("black-70").hex_value  # #4d4845 - visible against slate
 
     colors = {
         "editor.background": background,
@@ -53,6 +55,12 @@ def build_theme_payload(theme: ThemeDefinition) -> dict:
         "activityBar.foreground": foreground,
         "editorLineNumber.foreground": comment,
         "editorLineNumber.activeForeground": foreground,
+        "editorGroup.border": border,
+        "sideBar.border": border,
+        "activityBar.border": border,
+        "panel.border": border,
+        "titleBar.border": border,
+        "tab.border": border,
     }
 
     token_colors = [
