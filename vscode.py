@@ -112,7 +112,7 @@ def write_package_json(theme_entries: List[Tuple[ThemeDefinition, Path]], out_di
     manifest = dict(PACKAGE_METADATA)
     manifest["scripts"] = {
         "build": "python3 ../../vscode.py",
-        "package": "vsce package",
+        "package": "npx @vscode/vsce package",
     }
     manifest["contributes"] = {"themes": themes}
     manifest_path = out_dir / "package.json"
@@ -124,7 +124,7 @@ def run_vsce_package(out_dir: Path) -> None:
     """Invoke vsce package within the generated theme directory."""
 
     result = subprocess.run(
-        ["vsce", "package"],
+        ["npx", "@vscode/vsce", "package"],
         cwd=str(out_dir),
         capture_output=True,
         text=True,
