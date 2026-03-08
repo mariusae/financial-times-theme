@@ -33,11 +33,13 @@ def build_color_scheme(theme: ThemeDefinition) -> dict:
         gutter_fg = get_color("muted-inverse-text").hex_value
         find_highlight = get_color("oxford-40").hex_value
         guide_color = get_color("black-70").hex_value
+        code_background = get_color("black-80").hex_value
     else:
         line_highlight = get_color("wheat").hex_value
         gutter_fg = comment
         find_highlight = get_color("sky").hex_value
         guide_color = get_color("black-20").hex_value
+        code_background = get_color("wheat").hex_value
 
     return {
         "name": f"Financial Times {theme.slug.title()}",
@@ -83,6 +85,41 @@ def build_color_scheme(theme: ThemeDefinition) -> dict:
             {
                 "name": "Comment",
                 "scope": "comment, punctuation.definition.comment",
+                "foreground": "var(comment)",
+            },
+            {
+                "name": "Markup Bold",
+                "scope": "markup.bold",
+                "font_style": "bold",
+            },
+            {
+                "name": "Markup Italic",
+                "scope": "markup.italic",
+                "font_style": "italic",
+            },
+            {
+                "name": "Markup Bold Italic",
+                "scope": "markup.bold markup.italic, markup.italic markup.bold",
+                "font_style": "bold italic",
+            },
+            {
+                "name": "Markup Heading",
+                "scope": "markup.heading",
+                "font_style": "bold",
+            },
+            {
+                "name": "Markup Inline Code",
+                "scope": "markup.raw.inline",
+                "background": code_background,
+            },
+            {
+                "name": "Markup Code Block",
+                "scope": "markup.raw.block, markup.raw.code-fence",
+                "background": code_background,
+            },
+            {
+                "name": "Markup Punctuation",
+                "scope": "punctuation.definition.bold, punctuation.definition.italic, punctuation.definition.raw, punctuation.definition.heading",
                 "foreground": "var(comment)",
             },
         ],
