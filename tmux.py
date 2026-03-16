@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Iterable, List
 
 from ft_palette import INVERSE_THEME, STANDARD_THEME, ThemeDefinition, get_color
+from ghostty import ensure_contrast, MIN_CONTRAST_RATIO
 
 
 def trim_hash(value: str) -> str:
@@ -29,7 +30,15 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         status_bg = get_color("black-90").hex_value  # #1a1817
 
     # Accent color for active elements
-    accent = get_color("teal").hex_value  # #0d7680
+    accent_raw = get_color("teal").hex_value  # #0d7680
+
+    # Ensure contrast for colors used against the status bar background
+    comment_on_status = ensure_contrast(comment, status_bg, foreground)
+    accent_on_status = ensure_contrast(accent_raw, status_bg, foreground)
+
+    # Ensure contrast for colors used against the terminal background
+    comment_on_bg = ensure_contrast(comment, background, foreground)
+    accent_on_bg = ensure_contrast(accent_raw, background, foreground)
 
     lines = [
         f"# Financial Times {theme.slug.title()} (tmux)",
@@ -37,20 +46,24 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         "# Usage: Add to your ~/.tmux.conf or source this file:",
         f"#   source-file ~/.config/tmux/financial-times-{theme.slug}.conf",
         "",
+        "# Terminal background and foreground",
+        f"set -g window-style 'bg={background},fg={foreground}'",
+        f"set -g window-active-style 'bg={background},fg={foreground}'",
+        "",
         "# Status bar",
         f"set -g status-style 'bg={status_bg},fg={foreground}'",
         f"set -g status-left-style 'bg={status_bg},fg={foreground}'",
         f"set -g status-right-style 'bg={status_bg},fg={foreground}'",
         "",
         "# Window status",
-        f"set -g window-status-style 'bg={status_bg},fg={comment}'",
+        f"set -g window-status-style 'bg={status_bg},fg={comment_on_status}'",
         f"set -g window-status-current-style 'bg={status_bg},fg={foreground},bold'",
-        f"set -g window-status-activity-style 'bg={status_bg},fg={accent}'",
-        f"set -g window-status-bell-style 'bg={status_bg},fg={accent}'",
+        f"set -g window-status-activity-style 'bg={status_bg},fg={accent_on_status}'",
+        f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={comment}'",
-        f"set -g pane-active-border-style 'fg={accent}'",
+        f"set -g pane-border-style 'fg={comment_on_bg}'",
+        f"set -g pane-active-border-style 'fg={accent_on_bg}'",
         "",
         "# Message styling",
         f"set -g message-style 'bg={selection},fg={foreground}'",
@@ -60,11 +73,11 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g mode-style 'bg={selection},fg={foreground}'",
         "",
         "# Clock mode",
-        f"set -g clock-mode-colour '{accent}'",
+        f"set -g clock-mode-colour '{accent_on_bg}'",
         "",
         "# Copy mode match highlighting",
         f"set -g copy-mode-match-style 'bg={selection},fg={foreground}'",
-        f"set -g copy-mode-current-match-style 'bg={accent},fg={background}'",
+        f"set -g copy-mode-current-match-style 'bg={accent_on_bg},fg={background}'",
     ]
 
     return lines
