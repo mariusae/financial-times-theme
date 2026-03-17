@@ -27,7 +27,7 @@ ANSI_PALETTE_NAMES: List[str] = [
     "white",
 ]
 
-MIN_CONTRAST_RATIO = 4.5
+MIN_CONTRAST_RATIO = 5.5
 
 # Minimum luminance ratio between red/green pairs for colorblind accessibility.
 # A ratio of 2.0:1 provides strong differentiation for deuteranopia/protanopia.
