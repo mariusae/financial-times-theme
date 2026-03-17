@@ -32,6 +32,14 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
     # Accent color for active elements
     accent_raw = get_color("teal").hex_value  # #0d7680
 
+    # Pane border colors: foreground for active, subtle palette shade for inactive
+    if theme.slug == "standard":
+        active_border = get_color("black").hex_value  # #000000
+        inactive_border_raw = get_color("black-30").hex_value  # #b3a9a0
+    else:
+        active_border = foreground  # light on dark background
+        inactive_border_raw = get_color("black-70").hex_value  # #4d4845
+
     # Ensure contrast for colors used against the status bar background
     comment_on_status = ensure_contrast(comment, status_bg, foreground)
     accent_on_status = ensure_contrast(accent_raw, status_bg, foreground)
@@ -39,6 +47,10 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
     # Ensure contrast for colors used against the terminal background
     comment_on_bg = ensure_contrast(comment, background, foreground)
     accent_on_bg = ensure_contrast(accent_raw, background, foreground)
+
+    # Ensure active pane border has sufficient contrast against the background;
+    # inactive border is intentionally subtle, so skip the contrast check.
+    active_border_on_bg = ensure_contrast(active_border, background, foreground)
 
     lines = [
         f"# Financial Times {theme.slug.title()} (tmux)",
@@ -66,8 +78,8 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={comment_on_bg}'",
-        f"set -g pane-active-border-style 'fg={accent_on_bg}'",
+        f"set -g pane-border-style 'fg={inactive_border_raw}'",
+        f"set -g pane-active-border-style 'fg={active_border_on_bg}'",
         "",
         "# Message styling",
         f"set -g message-style 'bg={selection},fg={foreground}'",
