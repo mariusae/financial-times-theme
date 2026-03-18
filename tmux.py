@@ -38,7 +38,7 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         inactive_border_raw = get_color("black-30").hex_value  # #b3a9a0
     else:
         active_border = foreground  # light on dark background
-        inactive_border_raw = get_color("black-70").hex_value  # #4d4845
+        inactive_border_raw = get_color("black-60").hex_value  # #66605c
 
     # Ensure contrast for colors used against the status bar background
     comment_on_status = ensure_contrast(comment, status_bg, foreground)
@@ -78,8 +78,8 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={inactive_border_raw}'",
-        f"set -g pane-active-border-style 'fg={active_border_on_bg}'",
+        f"set -g pane-border-style 'fg={inactive_border_raw},italics'",
+        f"set -g pane-active-border-style 'fg={active_border_on_bg},bold'",
         "",
         "# Message styling",
         f"set -g message-style 'bg={selection},fg={foreground}'",
