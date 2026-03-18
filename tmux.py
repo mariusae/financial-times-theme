@@ -78,7 +78,7 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={inactive_border_raw},italics'",
+        f"set -g pane-border-style 'fg={inactive_border_raw}'",
         f"set -g pane-active-border-style 'fg={active_border_on_bg},bold'",
         "",
         "# Message styling",
