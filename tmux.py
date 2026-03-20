@@ -34,10 +34,10 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
 
     # Pane border colors: foreground for active, subtle palette shade for inactive
     if theme.slug == "standard":
-        active_border = get_color("black").hex_value  # #000000
+        active_border = get_color("black-50").hex_value  # #807973
         inactive_border_raw = get_color("black-30").hex_value  # #b3a9a0
     else:
-        active_border = foreground  # light on dark background
+        active_border = get_color("black-30").hex_value  # #b3a9a0
         inactive_border_raw = get_color("black-60").hex_value  # #66605c
 
     # Ensure contrast for colors used against the status bar background
