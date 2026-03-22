@@ -94,6 +94,7 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         "# Copy mode match highlighting",
         f"set -g copy-mode-match-style 'bg={selection},fg={foreground}'",
         f"set -g copy-mode-current-match-style 'bg={accent_on_bg},fg={background}'",
+        f"set -g copy-mode-position-style 'bg={selection},fg={foreground},bold'",
     ]
 
     return lines
