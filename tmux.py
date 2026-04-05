@@ -26,8 +26,10 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
     # Use a subtler, muted color for the status bar
     if theme.slug == "standard":
         status_bg = get_color("black-10").hex_value  # #e6d9ce
+        menu_selected_bg = get_color("black-20").hex_value  # #ccc1b7
     else:
         status_bg = get_color("black-90").hex_value  # #1a1817
+        menu_selected_bg = get_color("black-70").hex_value  # #4d4845
 
     # Accent color for active elements
     accent_raw = get_color("teal").hex_value  # #0d7680
@@ -85,8 +87,17 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g message-style 'bg={selection},fg={foreground}'",
         f"set -g message-command-style 'bg={selection},fg={foreground}'",
         "",
+        "# Menus and popups",
+        f"set -g menu-style 'bg={status_bg},fg={foreground}'",
+        f"set -g menu-selected-style 'bg={menu_selected_bg},fg={foreground},bold'",
+        f"set -g menu-border-style 'bg={status_bg},fg={inactive_border_raw}'",
+        f"set -g popup-style 'bg={status_bg},fg={foreground}'",
+        f"set -g popup-border-style 'bg={status_bg},fg={inactive_border_raw}'",
+        "",
         "# Mode styling (copy mode, etc.)",
         f"set -g mode-style 'bg={selection},fg={foreground}'",
+        f"set -g copy-mode-selection-style 'bg={selection},fg={foreground}'",
+        f"set -g copy-mode-mark-style 'bg={selection},fg={comment_on_bg}'",
         "",
         "# Clock mode",
         f"set -g clock-mode-colour '{accent_on_bg}'",
