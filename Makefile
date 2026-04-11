@@ -1,13 +1,13 @@
-.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install sublime sublime.install tmux tmux.install
+.PHONY: all all.install clean vscode vscode.install zed zed.install ghostty ghostty.install fish fish.install sublime sublime.install tmux tmux.install zellij zellij.install
 
 # VSCode binary (override with CODE=... make vscode.install)
 CODE ?= code
 
 # Build all themes
-all: vscode zed ghostty fish sublime tmux
+all: vscode zed ghostty fish sublime tmux zellij
 
 # Build and install all themes
-all.install: vscode.install zed.install ghostty.install fish.install sublime.install tmux.install
+all.install: vscode.install zed.install ghostty.install fish.install sublime.install tmux.install zellij.install
 
 # VSCode targets
 vscode:
@@ -82,6 +82,22 @@ tmux.install: tmux
 	@echo "  source-file ~/.config/tmux/financial-times-standard.conf"
 	@echo "  or"
 	@echo "  source-file ~/.config/tmux/financial-times-inverse.conf"
+
+# Zellij targets
+zellij:
+	@echo "Building Zellij theme..."
+	python3 zellij.py
+
+zellij.install: zellij
+	@echo "Installing Zellij theme..."
+	@mkdir -p ~/.config/zellij/themes
+	cp build/zellij/*.kdl ~/.config/zellij/themes/
+	@echo "Zellij themes installed to ~/.config/zellij/themes/"
+	@echo "Add to your ~/.config/zellij/config.kdl:"
+	@echo '  theme_dir "~/.config/zellij/themes"'
+	@echo '  theme "financial-times-standard"'
+	@echo "  or"
+	@echo '  theme "financial-times-inverse"'
 
 # Clean build artifacts
 clean:
