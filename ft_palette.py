@@ -577,6 +577,18 @@ FT_COLOR_PALETTE: Tuple[FTColor, ...] = (
         description="...",
         hex_value="#ffebd9",
     ),
+    FTColor(
+        name="paper-dim",
+        css_variable="",
+        description="Subtly dimmed paper for inactive tmux panes.",
+        hex_value="#faece0",
+    ),
+    FTColor(
+        name="slate-dim",
+        css_variable="",
+        description="Subtly dimmed slate for inactive tmux panes.",
+        hex_value="#21252d",
+    ),
 )
 
 FT_COLOR_BY_NAME = {color.name: color for color in FT_COLOR_PALETTE}

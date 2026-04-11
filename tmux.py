@@ -23,11 +23,13 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
     selection = theme.selection.hex_value
     comment = theme.comment_text.hex_value
 
-    # Use a subtler, muted color for the status bar
+    # Subtly dimmed background for inactive panes
     if theme.slug == "standard":
+        inactive_bg = get_color("paper-dim").hex_value  # #f2e5da
         status_bg = get_color("black-10").hex_value  # #e6d9ce
         menu_selected_bg = get_color("black-20").hex_value  # #ccc1b7
     else:
+        inactive_bg = get_color("slate-dim").hex_value  # #21252d
         status_bg = get_color("black-90").hex_value  # #1a1817
         menu_selected_bg = get_color("black-70").hex_value  # #4d4845
 
@@ -61,7 +63,7 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"#   source-file ~/.config/tmux/financial-times-{theme.slug}.conf",
         "",
         "# Terminal background and foreground",
-        f"set -g window-style 'bg={background},fg={foreground}'",
+        f"set -g window-style 'bg={inactive_bg},fg={foreground}'",
         f"set -g window-active-style 'bg={background},fg={foreground}'",
         "",
         "# Cursor",
@@ -80,8 +82,8 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={inactive_border_raw}'",
-        f"set -g pane-active-border-style 'fg={active_border_on_bg},bold'",
+        f"set -g pane-border-style 'fg={inactive_border_raw},bg={inactive_bg}'",
+        f"set -g pane-active-border-style 'fg={active_border_on_bg},bg={background},bold'",
         "",
         "# Message styling",
         f"set -g message-style 'bg={selection},fg={foreground}'",
