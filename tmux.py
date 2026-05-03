@@ -23,9 +23,9 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
     selection = theme.selection.hex_value
     comment = theme.comment_text.hex_value
 
-    # Subtly dimmed background for inactive panes
+    # Keep the palette choice available, but do not apply inactive backgrounds.
     if theme.slug == "standard":
-        inactive_bg = get_color("paper-dim").hex_value  # #f2e5da
+        inactive_bg = get_color("paper-dim").hex_value  # #faece0
         status_bg = get_color("black-10").hex_value  # #e6d9ce
         menu_selected_bg = get_color("black-20").hex_value  # #ccc1b7
     else:
@@ -63,7 +63,8 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"#   source-file ~/.config/tmux/financial-times-{theme.slug}.conf",
         "",
         "# Terminal background and foreground",
-        f"set -g window-style 'bg={inactive_bg},fg={foreground}'",
+        f"# Inactive background palette choice retained: {inactive_bg}",
+        f"set -g window-style 'bg={background},fg={foreground}'",
         f"set -g window-active-style 'bg={background},fg={foreground}'",
         "",
         "# Cursor",
@@ -82,8 +83,10 @@ def build_theme_lines(theme: ThemeDefinition) -> List[str]:
         f"set -g window-status-bell-style 'bg={status_bg},fg={accent_on_status}'",
         "",
         "# Pane borders",
-        f"set -g pane-border-style 'fg={inactive_border_raw},bg={inactive_bg}'",
+        f"set -g pane-border-style 'fg={inactive_border_raw},bg={background}'",
         f"set -g pane-active-border-style 'fg={active_border_on_bg},bg={background},bold'",
+        "set -g pane-border-status top",
+        "set -g pane-border-format '#{?pane_marked,#[reverse],} #{pane_index}: #{pane_title} #[default]'",
         "",
         "# Message styling",
         f"set -g message-style 'bg={selection},fg={foreground}'",
